@@ -1,14 +1,14 @@
 # TeamD
 
 **1. 组员**:
- |组员|博客地址|
- |---|---|
- |张维|[CSDN][1]|
- |周阔|[CSDN][2]|
- |闵崇|[CSDN][3]|
- |杨旭|[CSDN][4]|
- |李宇鹏|[CSDN][5]|
- |刘婷|[CSDN][6]|
+ | 组员 | 博客地址 |
+ | --- | --- |
+ | 张维 | [CSDN][1] |
+ | 周阔 | [CSDN][2] |
+ | 闵崇 | [CSDN][3] |
+ | 杨旭 | [CSDN][4] |
+ | 李宇鹏 | [CSDN][5] |
+ | 刘婷 | [CSDN][6] |
  [1]:https://blog.csdn.net/go_format
  [2]:https://me.csdn.net/blog/weixin_45626515
  [4]:https://blog.csdn.net/ABded
