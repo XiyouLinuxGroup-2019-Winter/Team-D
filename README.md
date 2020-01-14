@@ -4,18 +4,13 @@
 
  | 组员 | 博客地址 |
  | :---: | :---: |
- | 张维 | [CSDN][1] |
- | 周阔 | [CSDN][2] |
- | 闵崇 | [CSDN][3] |
- | 杨旭 | [CSDN][4] |
- | 李宇鹏 | [CSDN][5] |
- | 刘婷 | [CSDN][6] |
- [1]: https://blog.csdn.net/go_format
- [2]: https://me.csdn.net/blog/weixin_45626515
- [4]: https://blog.csdn.net/ABded
- [3]: https://me.csdn.net/XIAOYUELIN_
- [5]: https://me.csdn.net/qq_43646576
- [6]: https://me.csdn.net/qq_43811102
+ | 张维 | [CSDN](https://blog.csdn.net/go_format)|
+ | 周阔 | [CSDN](https://me.csdn.net/blog/weixin_45626515)|
+ | 闵崇 | [CSDN](https://me.csdn.net/XIAOYUELIN_)|
+ | 杨旭 | [CSDN](https://blog.csdn.net/ABded)|
+ | 李宇鹏 | [CSDN](https://me.csdn.net/qq_43646576) |
+ | 刘婷 | [CSDN](https://me.csdn.net/qq_43811102)|
+
 **2. 大家都新建一个以自己为名字的目录,之后都将自己的代码上传到自己目录下面,命名清楚明白.(上传源文件,不要上传可执行文件)**
 
 **3. 代码规范:请参考内核代码风格,或者直接参考CPP上面的代码风格(这个很重要,我不希望我去私聊你们!!!)**
