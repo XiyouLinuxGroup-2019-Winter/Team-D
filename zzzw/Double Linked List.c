@@ -3,6 +3,7 @@
 #include <math.h>
 
 //头节点为空
+//根据需要可以加一个成员指针 指向另一端的的节点
 struct list{
 	int data;
 	struct list *prev;
