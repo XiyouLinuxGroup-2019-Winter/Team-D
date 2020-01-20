@@ -13,19 +13,22 @@ void list_search_key(T key, struct list *head);
 void list_show(struct list *head);
 struct list * list_modify(T tar, struct list *head, T new);
 
+//头节点为空
 struct list{
-	 T data;
+	T data;
+	int cnt;
 	struct list* next;
 };
 
 int main(int argc, char *argv[]) {
-	
+
 }
 
 struct list* list_create()
 {
 	struct list*p = malloc(sizeof(struct list));
 	p->next = NULL;
+	p->cnt = 0;
 	
 	return p;
 }
@@ -44,6 +47,10 @@ struct list* list_add_fnt(struct list* tail)
 		
 		struct list* temp = malloc(sizeof(struct list));
 		temp->next = head;
+		
+		temp->cnt = head->cnt + 1;
+		head->cnt = 0;
+		
 		temp->data = data;
 		head = temp;
 	}
@@ -72,6 +79,8 @@ struct list* list_add_back(struct list* head)
 		p->next = NULL;
 		
 		cur = cur->next;
+		
+		head->cnt++;
 	}
 }
 
@@ -81,18 +90,16 @@ struct list* list_del_i(int i, struct list *head)
 	struct list *cur = head;
 	struct list *prev = NULL;
 	
-	while(cur->next != NULL && cnt < i)
-		prev = cur, cur = cur->next, cnt++;
-	
-	if(cnt < i) 
+	if(head->cnt < i) 
 		{
 			printf("i beyond the boundary");
 			return head;
 		}
 	
-	
 	prev->next = cur->next;
 	free(cur);
+	
+	head->cnt--;
 	
 	return head;
 }
@@ -112,12 +119,13 @@ struct list* list_del_key(struct list *head, T key)
 		
 		prev = cur;
 		cur = cur->next;
+		
+		head->cnt--;
 	}
 
 	return head;
 }
 
-//
 //看具体怎么改
 struct list * list_modify(T tar, struct list *head, T new)
 {
@@ -136,7 +144,7 @@ struct list * list_modify(T tar, struct list *head, T new)
 	cur->data = new;
 	return head;
 }
-//
+
 
 void list_search_i(int i, struct list *head)
 {
