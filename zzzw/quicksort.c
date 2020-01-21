@@ -5,11 +5,16 @@
 void quicksort(int *a, int l, int r);
 
 int main(int argc, char *argv[]) {
-	int a[] = {4, 2, 3, 1 , 5, 7, 9, 8};
+	int a[10050];
+	int n;
+	scanf("%d", &n);
+	for (int i = 0; i < n ; i++) {
+		scanf("%d", &a[i]);
+	}
 	
-	quicksort(a, 0, 7);
+	quicksort(a, 0, n - 1);
 	
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < n; i++) {
 		printf("%d ", a[i]);
 	}	
 }
@@ -51,7 +56,7 @@ void quicksort(int *a, int l, int r)
 	int lc = l;
 	int rc = r;
 	
-	for(int i = l; lc < rc; i++)
+	for(int i = l; lc < rc && i <= r; i++)
 	{
 		if(a[i] < part_element)
 			{
