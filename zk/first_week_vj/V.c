@@ -19,14 +19,7 @@ int main()
             }
         }
     }
-    if (n == 1) {
-        printf("%d\n", a[0]);
-    }
-    else {
-        printf("%d\n", a[n/2+1]);
-    }
-
-
+        printf("%d\n", a[n/2]);
     return 0;
 }
 
