@@ -54,6 +54,26 @@ void top_insert(struct link *p) {
     current->pnext = insert;
 }
 
+void tail_insert(struct link *p) {
+    int position;
+    printf("please input insert position:\n");
+    scanf("%d", &position);
+    struct link *current, *insert;
+    insert = (struct link*)malloc(sizeof(struct link));
+    printf("please input insert name:\n");
+    scanf("%s", insert->name);
+    current = p;
+    int cnt = 0;
+    while (cnt != position) {
+        current = current->pnext;
+        cnt++;
+    }
+    insert->pnext = current->pnext;
+    current->pnext = insert;
+}
+
+   
+
 void dellink(struct link *p) {
     printf("please input del position:\n");
     int position;
