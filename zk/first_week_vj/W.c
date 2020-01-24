@@ -15,38 +15,23 @@ int main()
         }
         getchar();
     }
-    int people = 0;
-    int flag = 0;
     int max;
-    int k = 1;
-    for (j = 0; j < n; j++) {
-        int cnt = 0;
-
-        if (flag == 0) {
-            max = a[][j];
-        }
-        else {
-            j = 0;
-            for ( ; k < n; k++) {
-                max = a[k][j];
-                break;
-            }
-        }
+    int cnt = 0;
+    for (j = 0; j < m; j++) {
+        max = 0;
         for (i = 0; i < n; i++) {
-            if (max > a[i][j]) {
-                cnt++;
+            if (max < a[i][j]) {
+                max = a[i][j];
             } 
         }
-        if (cnt == n-1) {
-            people++;
-            flag = 1;
-        }
-        else {
-            flag = 0;
+        for (i = 0; i < n; i++) {
+            if (a[i][j] == max) {
+                cnt++;
+            }
         }
     }
 
-    printf("%d\n", people);
+    printf("%d\n", cnt);
 
     return 0;
 }
