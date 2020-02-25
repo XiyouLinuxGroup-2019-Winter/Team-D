@@ -1,0 +1,38 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdio>
+
+using namespace std;
+
+long long  a[100100];
+
+int main(int argc, char *argv[]) {
+	int n, k;
+	scanf("%d%d", &n, &k);
+	
+	for(int i = 0; i < n; i++)
+		scanf("%lld", &a[i]);
+	
+	sort(a, a + n);
+	
+	long long ans = 0;
+	int low = 1;
+	int high = a[n - 1];
+	while(low <= high)
+	{	
+		int cnt = k - 1;
+		int mid = (low + high) >> 1;
+		int now = 0;
+		
+		for(int i = 1; i < n; i++)
+		{
+			if(a[now] + mid <= a[i])
+				now = i, cnt--;
+			if(cnt == 0) break;
+		}
+		if(cnt == 0)
+			ans = mid, low = mid + 1;
+		else high = mid - 1; 
+	}
+	printf("%lld", ans);
+}
