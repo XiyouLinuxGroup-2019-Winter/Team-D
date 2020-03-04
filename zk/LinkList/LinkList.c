@@ -150,7 +150,11 @@ LinkList searchLinkListKey(int key) {
 }
 
 void displayLinkList() {
-
+    LinkList cur = p;
+    while (cur->next != NULL) {
+        cur = cur->next;
+        printf("%d\t", cur->data);
+    }
 }
 
 
