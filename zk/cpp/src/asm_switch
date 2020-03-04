@@ -1,0 +1,79 @@
+
+switch.o：     文件格式 elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <main>:
+   0:	55                   	push   %rbp
+   1:	48 89 e5             	mov    %rsp,%rbp
+   4:	48 83 ec 10          	sub    $0x10,%rsp
+   8:	c7 45 fc 04 00 00 00 	movl   $0x4,-0x4(%rbp)
+   f:	83 7d fc 05          	cmpl   $0x5,-0x4(%rbp)
+  13:	0f 87 83 00 00 00    	ja     9c <main+0x9c>
+  19:	8b 45 fc             	mov    -0x4(%rbp),%eax
+  1c:	48 8d 14 85 00 00 00 	lea    0x0(,%rax,4),%rdx
+  23:	00 
+  24:	48 8d 05 00 00 00 00 	lea    0x0(%rip),%rax        # 2b <main+0x2b>
+  2b:	8b 04 02             	mov    (%rdx,%rax,1),%eax
+  2e:	48 63 d0             	movslq %eax,%rdx
+  31:	48 8d 05 00 00 00 00 	lea    0x0(%rip),%rax        # 38 <main+0x38>
+  38:	48 01 d0             	add    %rdx,%rax
+  3b:	ff e0                	jmpq   *%rax
+  3d:	48 8d 3d 00 00 00 00 	lea    0x0(%rip),%rdi        # 44 <main+0x44>
+  44:	b8 00 00 00 00       	mov    $0x0,%eax
+  49:	e8 00 00 00 00       	callq  4e <main+0x4e>
+  4e:	eb 5e                	jmp    ae <main+0xae>
+  50:	48 8d 3d 00 00 00 00 	lea    0x0(%rip),%rdi        # 57 <main+0x57>
+  57:	b8 00 00 00 00       	mov    $0x0,%eax
+  5c:	e8 00 00 00 00       	callq  61 <main+0x61>
+  61:	eb 4b                	jmp    ae <main+0xae>
+  63:	48 8d 3d 00 00 00 00 	lea    0x0(%rip),%rdi        # 6a <main+0x6a>
+  6a:	b8 00 00 00 00       	mov    $0x0,%eax
+  6f:	e8 00 00 00 00       	callq  74 <main+0x74>
+  74:	eb 38                	jmp    ae <main+0xae>
+  76:	48 8d 3d 00 00 00 00 	lea    0x0(%rip),%rdi        # 7d <main+0x7d>
+  7d:	b8 00 00 00 00       	mov    $0x0,%eax
+  82:	e8 00 00 00 00       	callq  87 <main+0x87>
+  87:	eb 25                	jmp    ae <main+0xae>
+  89:	48 8d 3d 00 00 00 00 	lea    0x0(%rip),%rdi        # 90 <main+0x90>
+  90:	b8 00 00 00 00       	mov    $0x0,%eax
+  95:	e8 00 00 00 00       	callq  9a <main+0x9a>
+  9a:	eb 12                	jmp    ae <main+0xae>
+  9c:	48 8d 3d 00 00 00 00 	lea    0x0(%rip),%rdi        # a3 <main+0xa3>
+  a3:	b8 00 00 00 00       	mov    $0x0,%eax
+  a8:	e8 00 00 00 00       	callq  ad <main+0xad>
+  ad:	90                   	nop
+  ae:	b8 00 00 00 00       	mov    $0x0,%eax
+  b3:	c9                   	leaveq 
+  b4:	c3                   	retq   
+
+00000000000000b5 <_Z41__static_initialization_and_destruction_0ii>:
+  b5:	55                   	push   %rbp
+  b6:	48 89 e5             	mov    %rsp,%rbp
+  b9:	48 83 ec 10          	sub    $0x10,%rsp
+  bd:	89 7d fc             	mov    %edi,-0x4(%rbp)
+  c0:	89 75 f8             	mov    %esi,-0x8(%rbp)
+  c3:	83 7d fc 01          	cmpl   $0x1,-0x4(%rbp)
+  c7:	75 32                	jne    fb <_Z41__static_initialization_and_destruction_0ii+0x46>
+  c9:	81 7d f8 ff ff 00 00 	cmpl   $0xffff,-0x8(%rbp)
+  d0:	75 29                	jne    fb <_Z41__static_initialization_and_destruction_0ii+0x46>
+  d2:	48 8d 3d 00 00 00 00 	lea    0x0(%rip),%rdi        # d9 <_Z41__static_initialization_and_destruction_0ii+0x24>
+  d9:	e8 00 00 00 00       	callq  de <_Z41__static_initialization_and_destruction_0ii+0x29>
+  de:	48 8d 15 00 00 00 00 	lea    0x0(%rip),%rdx        # e5 <_Z41__static_initialization_and_destruction_0ii+0x30>
+  e5:	48 8d 35 00 00 00 00 	lea    0x0(%rip),%rsi        # ec <_Z41__static_initialization_and_destruction_0ii+0x37>
+  ec:	48 8b 05 00 00 00 00 	mov    0x0(%rip),%rax        # f3 <_Z41__static_initialization_and_destruction_0ii+0x3e>
+  f3:	48 89 c7             	mov    %rax,%rdi
+  f6:	e8 00 00 00 00       	callq  fb <_Z41__static_initialization_and_destruction_0ii+0x46>
+  fb:	90                   	nop
+  fc:	c9                   	leaveq 
+  fd:	c3                   	retq   
+
+00000000000000fe <_GLOBAL__sub_I_main>:
+  fe:	55                   	push   %rbp
+  ff:	48 89 e5             	mov    %rsp,%rbp
+ 102:	be ff ff 00 00       	mov    $0xffff,%esi
+ 107:	bf 01 00 00 00       	mov    $0x1,%edi
+ 10c:	e8 a4 ff ff ff       	callq  b5 <_Z41__static_initialization_and_destruction_0ii>
+ 111:	5d                   	pop    %rbp
+ 112:	c3                   	retq   
