@@ -70,7 +70,7 @@ int addTailLinkList() {
 int delLinkListByI(int i) {
     LinkList cur = p;
     int j = 1;
-    while (1) {
+    while (j != i || cur->next != p) {
         cur = cur->next;
         j++;
         if (j == i || cur->next == p) {
@@ -89,19 +89,67 @@ int delLinkListByI(int i) {
 
 int delLinkListByKey(int key) {
     LinkList cur = p;
-    while (1) {
+    while (cur->next->data != key || cur->next->next != p) {
         cur = cur->next;
-        if (cur->data == key || cur == )
     }
+    if (cur->next->data != key) {
+        return 0;
+    }
+    LinkList tmp = cur->next;
+    cur->next = tmp->next;
+    tmp->next->prev = cur;
+    free(tmp);
+    return 1;
 }
 
-int modifyLinkList(int oldData);
+int modifyLinkList(int oldData) {
+    LinkList cur = p;
+    while (cur->data != oldData || cur->next != p) {
+        cur = cur->next;
+    }
+    if (cur->data != oldData) {
+        return 0;
+    }
+    printf("请输入新数据\n");
+    scanf("%d", &cur->data);
+    return 1;
+}
 
-LinkList searchLinkListByI(int i);
+LinkList searchLinkListByI(int i) {
+    LinkList cur = p;
+    int j = 0;
+    while (1) {
+        cur = cur->next;
+        if (j == i || cur->next == p) {
+            break;
+        }
+    }
+    if (j != i) {
+        return 0;
+    }    
+    return cur; 
+}
 
-LinkList searchLinkListByKey(int key);
+LinkList searchLinkListByKey(int key) {
+    LinkList cur = p;
+    while (1) {
+        cur = cur->next;
+        if (cur->data == key || cur->next == p) {
+            break;
+        }
+    }
+    if (cur->data != key) {
+        return 0;
+    }
+    return cur;
+}
 
-void displayLinkList();
+void displayLinkList() {
+    LinkList cur = p;
+    while (1) {
+
+    }
+}
 
 
 
