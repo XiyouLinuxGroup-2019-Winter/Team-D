@@ -14,6 +14,8 @@ LinkList p;
 void initLinkList();
 int addHeadLinkList();
 int addTailLinkList();
+int insertLinkListByI(int i);
+int insertLinkListByKey(int key);
 int delLinkListByI(int i);
 int delLinkListByKey(int kay);
 int modifyLinkList(int oldData);
@@ -47,7 +49,7 @@ int addHeadLinkList() {
 }
 
 int addTailLinkList() {
-    LinkList newNode = (LinkList)malloc(sizeof(Ndoe));
+    LinkList newNode = (LinkList)malloc(sizeof(Node));
     if (newNode == NULL) {
         printf("Failed\n");
         return 0;
@@ -60,6 +62,39 @@ int addTailLinkList() {
     }
     cur->next = newNode;
     newNode->next = NULL;
+    return 1;
+}
+
+int insertLinkListByI(int i) {
+    int j = 1;
+    LinkList cur = p;
+    while (cur->next != NULL && j < i) {
+        cur = cur->next;
+        j++;
+    }
+    if (cur->next == NULL || j > i) {
+        return 0;
+    }
+    LinkList tmp = (LinkList)malloc(sizeof(Node));
+    printf("please input new data:");
+    scanf("%d", &tmp->data);
+    tmp->next = cur->next;
+    cur->next = tmp;
+    return 1;
+}
+
+int insertLinkListByKey(int key) {
+    LinkList cur = p;
+    while (cur->next != NULL) {
+        if (cur->next->data == key) {  // !strcmp()
+            break;
+        }
+    }
+    LinkList tmp = (LinkList)malloc(sizeof(Node));
+    printf("please input new data:");
+    scanf("%d", &tmp->data);
+    tmp->next = cur->next;
+    cur->next = tmp;
     return 1;
 }
 
