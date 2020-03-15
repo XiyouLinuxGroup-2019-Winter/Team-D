@@ -89,6 +89,10 @@ int insertLinkListByKey(int key) {
         if (cur->next->data == key) {  // !strcmp()
             break;
         }
+        cur = cur->next;
+    }
+    if (cur->next == NULL) {
+        return 0;
     }
     LinkList tmp = (LinkList)malloc(sizeof(Node));
     printf("please input new data:");
