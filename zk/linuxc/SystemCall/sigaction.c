@@ -15,8 +15,8 @@ int main() {
     struct sigaction act;
 
     act.sa_handler = do_sig;
-//    act.sa_handler = SIG_DFL;
-//    act.sa_handler = SIG_IGN;
+//    act.sa_handler = SIG_DFL; 默认
+//    act.sa_handler = SIG_IGN; 忽略
     sigemptyset(&act.sa_mask);
     sigaddset(&act.sa_mask, SIGQUIT);
     act.sa_flags = 0;
