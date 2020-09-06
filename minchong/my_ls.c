@@ -9,37 +9,48 @@
 #include<grp.h>
 #include<pwd.h>
 #include<signal.h>
-#define PRINMAX 160
+#define PRINMAX 150
 int fx[5]={0};
 int namemax=0;
-int lenth=0;
+int lenth,lenth_m;
+typedef struct arg
+{
+	char name[1000];
+	struct arg *next;
+}ARGV;
+ARGV *head=NULL;
 char path[PATH_MAX+1]={'\0'};
 int compare(const void *p1,const void *p2)
 {
     return strcmp((char *)p1,(char *)p2);
 }
-void display(char *,int,int *,char [][PATH_MAX+1]);
-void display_dir(int,int,int *,char[][PATH_MAX+1]);
+void display(char *,ARGV *);
+void display_dir(int,ARGV *);
 int main(int argc,char **argv)
 {
     signal(2,SIG_IGN);
-    int i,j,k,lib=0,argcm=argc-1;
-    char ch,ARGV[100][PATH_MAX+1]={'\0'};
+    int i,j,k,lib=0;
+    char ch,finame[1000];
     struct stat buf;
-    if(argcm>100)
-    {
-        printf("参数过多!\n");
-        exit(1);
-    }
-    for(i=0;i<argcm;i++)
-    strcpy(ARGV[i],argv[i+1]);
-    for(i=0;i<argcm;i++)
-        if(ARGV[i][0]=='-')
+	ARGV *p,*p1,*p3;
+	head=p=p1=(ARGV *)malloc(sizeof(ARGV));
+	head->next=NULL;
+    for(i=0;i<argc-1;i++)
+	{
+	p1=(ARGV*)malloc(sizeof(ARGV));
+	p1->next=NULL;
+    strcpy(p1->name,argv[i+1]);
+	p->next=p1;
+	p=p1;
+	}
+	p=head;
+    for(p=p->next;p!=NULL;p=p->next)
+        if(p->name[0]=='-')
         {
             lib++;
-            for(j=1;j<strlen(ARGV[i]);j++)
+            for(j=1;j<strlen(p->name);j++)
             {
-                ch=ARGV[i][j];
+                ch=p->name[j];
                 switch(ch)
                 {
                     case 'l':fx[0]=1;break;
@@ -49,21 +60,29 @@ int main(int argc,char **argv)
                 }
             }
         }
-    if(lib==argcm)
+	for(p=head;p->next!=NULL;p=p->next);
+    if(lib==argc-1)
     {
-        argcm++;
-        strcpy(ARGV[argcm-1],"./");
+	p1=(ARGV*)malloc(sizeof(ARGV));
+	p1->next=NULL;
+    strcpy(p1->name,"./");
+	p->next=p1;
+	p=p1;
     }
-    for(i=0;i<argcm;i++)
+	p=head;
+    for(p=p->next;p!=NULL;p=p->next)
     {
     namemax=0;
-    if(ARGV[i][0]=='-')
+    if(p->name[0]=='-')
     continue;
     for(k=0;k<PATH_MAX;k++)
     path[k]='\0';
-    strcpy(path,ARGV[i]);
+    strcpy(path,p->name);
     if(fx[2]==1)
-    printf("%s:\n",path);
+	{
+	printf("\n");
+    printf("\033[1;32;40m %s:\n\033[0m",path);
+	}
     if(stat(path,&buf)==-1)
     {
         printf("目标文件不存在！\n");
@@ -80,7 +99,7 @@ int main(int argc,char **argv)
         }
         else 
         path[k]='\0';
-        display_dir(k,i,&argcm,ARGV);
+        display_dir(k,p);
     }
     else
     {
@@ -97,32 +116,38 @@ int main(int argc,char **argv)
         }
         finam[a]='\0';
         if(fx[0]==0)
-        display(path,i,&argcm,ARGV);
+        display(path,p);
         else
         printf("%s",finam);
     }
     printf("\n");
     lenth=0;
+    head->next=p->next;
+	free(p);
+	p=head;
   }
 }
-void display_dir(int len,int num,int *argcm,char ARGV[100][PATH_MAX+1])
+void display_dir(int len,ARGV * p)
 {
     DIR *dir;
     struct dirent *ptr;
     struct stat buf;
     int count=0,i,lk,ak[256],lo=0,ctr=0,w;
-    char filenames[256][PATH_MAX+1]={'\0'};
+    char **filenames;
+	filenames=(char **)malloc(sizeof(char *)*20000);
+	for (int t = 0; t < 20000; t++)
+        filenames[t] = (char *)malloc(sizeof(char*) *PATH_MAX);
     dir=opendir(path);
     if(dir==NULL)
     {
-    printf("文件打开失败！\n");
-    exit(1);
+    printf("目录打开失败！\n");
+    return;
     }
     while((ptr=readdir(dir))!=NULL)
     {
         namemax=(namemax>strlen(ptr->d_name)?namemax:strlen(ptr->d_name));
         count++;
-        if(count>256)
+        if(count>20000)
         {
             printf("文件数量超载！\n");
             exit(1);
@@ -133,19 +158,25 @@ void display_dir(int len,int num,int *argcm,char ARGV[100][PATH_MAX+1])
         filenames[count-1][len+strlen(ptr->d_name)]='\0';
     }
     closedir(dir);
+	lenth_m=PRINMAX/(namemax+2);
     qsort(filenames[0],count,sizeof(filenames[0]),compare);
     for(i=0;i<count;i++)
-    display(filenames[i],num,argcm,ARGV);
+    display(filenames[i],p);
+	count=0;
+	 for(int ki = 0;ki < 20000;ki++)
+        free(filenames[ki]);
+    free(filenames);
 }
-void display(char *pathname,int num,int *argcm,char ARGV[][PATH_MAX+1])
+void display(char *pathname,ARGV *p)
 {
     int i,j,blank=0;
     struct stat buf;
     char name[NAME_MAX+1];
+	ARGV *p1;
     if(lstat(pathname,&buf)==-1)
     {
         printf("文件打开失败！\n");
-        exit(1);
+        return;
     }
     for(i=0,j=0;i<strlen(pathname);i++)
     {
@@ -163,24 +194,21 @@ void display(char *pathname,int num,int *argcm,char ARGV[][PATH_MAX+1])
     {
         if(S_ISDIR(buf.st_mode))
         {
-            for(int h=(*argcm)-1;h>num;h--)
-            strcpy(ARGV[h+1],ARGV[h]);
-            strcpy(ARGV[num+1],pathname);
-            (*argcm)++;
+	       p1=(ARGV*)malloc(sizeof(ARGV));
+	       p1->next=p->next;
+           strcpy(p1->name,pathname);
+	       p->next=p1;
         }
     }
     if(fx[0]==0)
     {
-        if((PRINMAX-lenth)<(namemax+2))
+        if(lenth>=lenth_m)
         {
             lenth=0;
             printf("\n");
         }
-        blank=(namemax-strlen(name))+2;
-        printf("%s",name);
-        for(i=0;i<blank;i++)
-        printf(" ");
-        lenth+=(namemax+2);
+        printf("%-25.*s  ",namemax,name);
+        lenth++;
     }
     else
     {
