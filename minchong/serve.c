@@ -79,6 +79,7 @@ void messages(DATA *,int);
 void file_init(DATA *,int);
 void file_send(DATA *,int);
 void *send_file(void *);
+void group_manager(DATA *,int);
 int file_judge(int);
 int epfd;
 int main()
@@ -234,6 +235,7 @@ void *judge()
 			case 31:group_add(p,con_fd);break;
 			case 32:group_init(p,con_fd);break;
 			case 33:group_exit(p,con_fd);break;
+			case 34:group_manager(p,con_fd);break;
 			case 35:group_deletes(p,con_fd);break;
 			case 36:group_list(p,con_fd);break;
 			case 37:group_apply(p,con_fd);break;
@@ -1063,4 +1065,41 @@ int  file_judge(int c_fd)
 		if(file_fd[i]==c_fd)
 			return 1;
  return 0;
+}
+void group_manager(DATA *p,int con_fd)
+{
+	char str[200],chk[5],ck[5];
+	memset(str,0,sizeof(str));
+	MYSQL_RES *result;
+	MYSQL_ROW *row;
+	sprintf(str,"select *from group_member  where ID=\"%s\"  and group_id=\"%s\" ",p->send_id,p->recv_id);
+	if(mysql_query(&mysql,str)!=0)
+		ERROR(mysql select error!)
+	result=mysql_store_result(&mysql);
+	if(result==NULL)
+		ERROR(user NULL!)
+	row=mysql_fetch_row(result);
+	if(atoi((char *)row[4])!=3)
+		send_serve(con_fd,34,"\0","\0","\0","1");
+	else
+	{
+	   memset(str,0,sizeof(str));
+	   sprintf(str,"select *from group_member  where ID=\"%s\"  and group_id=\"%s\" ",p->buf,p->recv_id);
+	   if(mysql_query(&mysql,str)!=0)
+		  ERROR(mysql select error!)
+	   result=mysql_store_result(&mysql);
+	   if(result==NULL)
+	    	ERROR(user NULL!)
+	   row=mysql_fetch_row(result);
+	   if(row==NULL)
+		send_serve(con_fd,34,"\0","\0","\0","2");
+	   else
+	   {
+	      memset(str,0,sizeof(str));
+	      sprintf(str,"update  group_member set status=\"%d\" where ID=\"%s\" ",2,p->buf);
+	      if(mysql_query(&mysql,str)!=0)
+		     ERROR(mysql select error!)
+		  send_serve(con_fd,34,"\0","\0","\0","0");
+	   }
+	}
 }

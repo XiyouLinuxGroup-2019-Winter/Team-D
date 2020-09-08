@@ -19,7 +19,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-//#include"md5.h"
 #include <memory.h>
 #include <queue>
 using namespace std;
@@ -360,7 +359,7 @@ void user()
 			case '9':group_add();break;
 			case 'a':group_init();break;
 			case 'b':group_exit();break;
-		//	case 'c':group_root();break;
+			case 'c':group_root();break;
 			case 'd':group_deletes();break;
 			case 'e':group_list();break;
 			case 'f':file_send();break;

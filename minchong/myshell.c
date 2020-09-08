@@ -4,11 +4,11 @@
 #include<string.h>
 #include<sys/wait.h>
 #include<sys/types.h>
+#include<readline/readline.h>
 #include<fcntl.h>
 #include<sys/stat.h>
 #include<dirent.h>
 #define ERROR(x)  {puts(#x);exit(1);}
-int modl=0,background=0;
 void get_input(char *);
 int find(char *); 
 void explain_input(char *,int *,char [100][256]);
@@ -17,20 +17,31 @@ int main()
 {
 	signal(2,SIG_IGN);
 	int i,argcount=0;
-	char arglist[100][256],buf[256];
+	char arglist[100][256];
+	char *buf=NULL;
+	char **arg=NULL;
+	buf=(char *)malloc(256);
+	if(buf==NULL)
+	{
+		printf("malloc error\n");
+		exit(-1);
+	}
 	while(1)
 	{
-		memset(buf,0,256);
+		memset(buf,0,sizeof(buf));
 		printf("myshell$$ ");
 		get_input(buf);
-		if(strcmp(buf,"exit\n")==0||strcmp(buf,"logout\n")==0)
+		if(strcmp(buf,"exit")==0)
 			break;
 		for(i=0;i<100;i++)
-			arglist[i][0]='\0';
+			memset(arglist[i],0,sizeof(arglist[i]));
 		argcount=0;
 		explain_input(buf,&argcount,arglist);
 		do_cmd(argcount,arglist);
 	}
+		if(buf!=NULL)
+			free(buf);
+		buf=NULL;
 	exit(0);
 }
 void get_input(char *buf)
@@ -44,42 +55,38 @@ void get_input(char *buf)
 	}
 	if(len==256)
 	ERROR(command is too long!)
-	buf[len]='\n';
-	len++;
 	buf[len]='\0';
 }
 void explain_input(char *buf,int *argcount,char arglist[100][256])
 {
 	int i,k=0,m=0,l=0;
-	for(i=0;;i++)
-		if(buf[i]!=' ')
-			break;
-	for(i;;i++)
+	char *p=buf,*q=buf;
+	while(1)
 	{
-		if(buf[i]=='\n')
-		{
-			arglist[m][l]='\0';
+		if(p[0]=='\0')
 			break;
-		}
-		if(buf[i]==' ')
+		if(p[0]==' ')
+			p++;
+		else
 		{
-			k++;
-			continue;
+			q=p;
+			m=0;
+			while((q[0]!=' ')&&(q[0])!='\0')
+			{
+				m++;
+				q++;
+			}
+			strncpy(arglist[*argcount],p,m+1);
+			arglist[*argcount][m]='\0';
+			*argcount=*argcount+1;
+			p=q;
 		}
-		if(k>m)
-		{
-			k=++m;
-			arglist[m][l]='\0';
-			l=0;
-		}
-		arglist[m][l]=buf[i];
-		l++;
 	}
-	*argcount=m+1;
 }
 void do_cmd(int argcount,char arglist[100][256])
 {
-	int i,flag=0,fd,status2;
+	int modl=0,background=0;
+	int i,flag=0,status2;
 	pid_t pid;
 	char *arg[argcount+1],*argnext[argcount+1],*file;
 	if(strcmp(arglist[0],"cd")==0)
@@ -92,12 +99,13 @@ void do_cmd(int argcount,char arglist[100][256])
 	arg[argcount]=NULL;
 	for(i=0;i<argcount;i++)
 	{
-		if(strcmp(arg[i],"&")==0)
+		if(strncmp(arg[i],"&",1)==0)
 		{
 			if(i=argcount-1)
 			{
 				background=1;
 				arg[argcount-1]=NULL;
+				break;
 			}
 			else
 				ERROR(wrong command!)
@@ -123,12 +131,17 @@ void do_cmd(int argcount,char arglist[100][256])
 		{
 			flag++;
 			modl=3;
+			if(arg[i+1]==NULL)
+				flag++;
 			if(i==0)
 				flag++;
 		}
 	}
 	if(flag>1)
-		ERROR(wrong command!)
+	{
+		printf("参数错误\n");
+		return;
+	}
 	if(modl==1)
 	{
 		for(i=0;arg[i]!=NULL;i++)
@@ -170,10 +183,14 @@ void do_cmd(int argcount,char arglist[100][256])
 		ERROR(fork error!)
 	switch(modl)
 	{
+		int fd;
 		case 0:if(pid==0)
 		       {
 		       if(find(arg[0])==0)
-		       ERROR(404 Not Found!)
+			   {
+				   printf("404 NOT FOUND!\n");
+				   exit(0);
+			   }
 		       execvp(arg[0],arg);
 		       exit(0);
 		       }
@@ -181,18 +198,24 @@ void do_cmd(int argcount,char arglist[100][256])
 		case 1:if(pid==0)
 		       {
 		       if(find(arg[0])==0)
-		       ERROR(404 Not Found!)
-		       fd=open(file,O_RDWR|O_CREAT|O_TRUNC,0644);
+			   {
+				   printf("404 NOT FOUND!\n");
+				   exit(0);
+			   }
+		       fd=open(file,O_WRONLY|O_CREAT,0644);
 		       dup2(fd,STDOUT_FILENO);
 		       execvp(arg[0],arg);
-		       close(fd);
 		       exit(0);
 		       }
 		       break;
 		case 2:if(pid==0)
 		       {
+			   int  fd1=STDIN_FILENO;
 		       if(find(arg[0])==0)
-		       ERROR(404 Not Found!)
+			   {
+				   printf("404 NOT FOUND!\n");
+				   break;
+			   }
 		       fd=open(file,O_RDONLY);
 		       dup2(fd,STDIN_FILENO);
 		       execvp(arg[0],arg);
@@ -207,18 +230,24 @@ void do_cmd(int argcount,char arglist[100][256])
 		       else if(pid2==0)
 		       {
 		       if(find(arg[0])==0)
-		       ERROR(404 Not Found!)
+			   {
+				   printf("404 NOT FOUND!\n");
+				   break;
+			   }
 		       fd2=open("/tmp/youdonotknowfile",O_WRONLY|O_CREAT|O_TRUNC,0644);
-		       dup2(fd2,STDOUT_FILENO);
+		       dup2(fd2,1);
 		       execvp(arg[0],arg);
 		       exit(0);
 		       }
 		       if(waitpid(pid2,&status2,0)==-1)
 		       ERROR(wait for chid process error!)
 		       if(find(argnext[0])==0)
-		       ERROR(404 Not Found!)
+			   {
+				   printf("404 NOT FOUND!\n");
+				   break;
+			   }
 		       fd2=open("/tmp/youdonotknowfile",O_RDONLY);
-		       dup2(fd2,STDIN_FILENO);
+		       dup2(fd2,0);
 		       execvp(argnext[0],argnext);
 		       if(remove("/tmp/youdonotknowfile"))
 		       printf("remove error!\n");
@@ -231,7 +260,7 @@ void do_cmd(int argcount,char arglist[100][256])
 	if(background==1)
 		return;
 	if(waitpid(pid,&status2,0)==-1)
-	ERROR(wait for child process error!)
+	ERROR(wait child process error!)
 }
 int find(char *command)
 {
